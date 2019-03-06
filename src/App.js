@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
-import Button from '@material-ui/core/Button';
+import RootComponent from './components/RootComponent/RootComponent';
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <Button variant="contained" color="primary">
-          Hello World1
-        </Button>
-      </div>
+      <React.Fragment>
+        <RootComponent />
+      </React.Fragment>
     );
   }
 }

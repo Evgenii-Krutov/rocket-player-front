@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
+import red from '@material-ui/core/colors/red';
 
 const theme = createMuiTheme({
   palette: {
-    primary: purple,
+    primary: red,
     secondary: {
       main: '#f44336',
     },
