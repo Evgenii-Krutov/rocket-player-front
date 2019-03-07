@@ -33,6 +33,10 @@ class RootComponent extends React.Component {
     pageNumber: 0,
   };
 
+  componentDidMount() {
+    document.getElementById("dz-root").click();
+  }
+
   handleDrawerClick = (pageNumber) => {
     this.setState({
       toolBarText: drawerValues[pageNumber],

@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Rocket Player</title>
   </head>
-  <body>
+
+  <body onload="codeAddress()">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <div id="dz-root"></div>
+    <div id="play"></div>
+    <div id="stop"></div>
+    <div id="initial_load_tools" onClick="codeAddress()"></div>
+    <script type="text/javascript" src="./main.js"></script>
+    <script type="text/javascript" src="http://cdn-files.deezer.com/js/min/dz.js"></script>
+    <script>
+      document.getElementById("initial_load_tools").click();
+    </script>
   </body>
+
 </html>
