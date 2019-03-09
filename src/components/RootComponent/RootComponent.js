@@ -9,6 +9,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
@@ -19,22 +22,33 @@ import MusicNote from '@material-ui/icons/MusicNote';
 import SpeakerIcon from '@material-ui/icons/Speaker';
 import RadioIcon from '@material-ui/icons/Radio';
 import SettingsIcon from '@material-ui/icons/Settings';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import DeezerMusicComponent from '../DeezerMusicComponent';
 import SoundcloudMusicComponent from '../SoundcloudMusicComponent';
 import CustomRadioComponent from '../CustomRadioComponent';
 import AboutComponent from '../AboutComponent';
 
-const drawerValues = ['Deezer Music', 'Soundcloud Music', 'Custom Radio', 'About'];
+const drawerValues = ['Deezer', 'Soundcloud', 'Custom Radio', 'About'];
 
 class RootComponent extends React.Component {
   state = {
     toolBarText: drawerValues[0],
     pageNumber: 0,
+    isAuthUser: false,
+    anchorEl: null,
   };
 
   componentDidMount() {
+    if (localStorage.getItem("accessToken")) {
+      this.setState({ isAuthUser: true });
+    }
+    document.getElementById("login").addEventListener("click", this.userAuthVerification);
+  }
+
+  appLogin = () => {
     document.getElementById("dz-root").click();
+    this.handleClose();
   }
 
   handleDrawerClick = (pageNumber) => {
@@ -44,8 +58,54 @@ class RootComponent extends React.Component {
     });
   };
 
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  userAuthVerification = () => {
+    this.setState({ isAuthUser: true });
+  }
+
   render() {
     const { classes } = this.props;
+    const open = Boolean(this.state.anchorEl);
+
+    const loginElement = (
+      <div className={classes.loginElement}>
+        <IconButton
+          aria-owns={open ? 'menu-appbar' : undefined}
+          aria-haspopup="true"
+          onClick={this.handleMenu}
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={this.state.anchorEl}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={open}
+          onClose={this.handleClose}
+        >
+          {!this.state.isAuthUser
+            && <MenuItem onClick={this.appLogin}>Login</MenuItem>
+          }
+          <MenuItem onClick={this.handleClose} disabled={!this.state.isAuthUser}>Profile</MenuItem>
+          <MenuItem onClick={this.handleClose} disabled={!this.state.isAuthUser}>My account</MenuItem>
+        </Menu>
+      </div>
+    )
 
     const drawer = (
       <div>
@@ -88,7 +148,6 @@ class RootComponent extends React.Component {
         </List>
       </div>
     );
-
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -97,6 +156,7 @@ class RootComponent extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               {this.state.toolBarText}
             </Typography>
+            {loginElement}
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer}>
