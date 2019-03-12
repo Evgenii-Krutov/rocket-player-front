@@ -39,11 +39,23 @@ class RootComponent extends React.Component {
     anchorEl: null,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     if (localStorage.getItem("accessToken")) {
       this.setState({ isAuthUser: true });
     }
     document.getElementById("login").addEventListener("click", this.userAuthVerification);
+    const res = await fetch('http://localhost:3000/search',
+      { 
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+ 
+        },
+        body: JSON.stringify({ query: 'carach angren' }),
+      });
+    const aaaa = await res.json();
+    console.log(aaaa);
   }
 
   appLogin = () => {
