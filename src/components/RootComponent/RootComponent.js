@@ -30,6 +30,7 @@ import DeezerMusicComponent from '../DeezerMusicComponent';
 import SoundcloudMusicComponent from '../SoundcloudMusicComponent';
 import CustomRadioComponent from '../CustomRadioComponent';
 import AboutComponent from '../AboutComponent';
+import TrackPlayerComponent from '../TrackPlayerComponent';
 
 const drawerValues = ['Deezer', 'Soundcloud', 'Custom Radio', 'About'];
 
@@ -250,6 +251,7 @@ class RootComponent extends React.Component {
           {this.state.pageNumber === 1 && <SoundcloudMusicComponent />}
           {this.state.pageNumber === 2 && <CustomRadioComponent />}
           {this.state.pageNumber === 3 && <AboutComponent />}
+          <TrackPlayerComponent />
         </main>
       </div>
     );
