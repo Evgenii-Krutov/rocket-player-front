@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
+import InputBase from '@material-ui/core/InputBase';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -23,6 +24,7 @@ import SpeakerIcon from '@material-ui/icons/Speaker';
 import RadioIcon from '@material-ui/icons/Radio';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import SearchIcon from '@material-ui/icons/Search';
 
 import DeezerMusicComponent from '../DeezerMusicComponent';
 import SoundcloudMusicComponent from '../SoundcloudMusicComponent';
@@ -37,25 +39,21 @@ class RootComponent extends React.Component {
     pageNumber: 0,
     isAuthUser: false,
     anchorEl: null,
+    userAccount: {},
   };
+  timer = null;
 
   async componentDidMount() {
     if (localStorage.getItem("accessToken")) {
-      this.setState({ isAuthUser: true });
+      const userInfo = await this.getUserInformation();
+      if (!userInfo.error) {
+        this.setState({
+          userAccount: userInfo,
+          isAuthUser: true,
+        });
+      }
     }
     document.getElementById("login").addEventListener("click", this.userAuthVerification);
-    const res = await fetch('http://localhost:3000/search',
-      { 
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
- 
-        },
-        body: JSON.stringify({ query: 'carach angren' }),
-      });
-    const aaaa = await res.json();
-    console.log(aaaa);
   }
 
   appLogin = () => {
@@ -78,8 +76,53 @@ class RootComponent extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  userAuthVerification = () => {
-    this.setState({ isAuthUser: true });
+  userAuthVerification = async () => {
+    const userInfo = await this.getUserInformation();
+    if (!userInfo.error) {
+      this.setState({
+        userAccount: userInfo,
+        isAuthUser: true
+      });
+    }
+  }
+
+  appLogout = () => {
+    localStorage.removeItem('accessToken');
+    this.setState({ isAuthUser: false });
+  }
+
+  getUserInformation = async () => {
+    const res = await fetch('http://localhost:3000/getUser',
+    { 
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: localStorage.getItem("accessToken") }),
+    });
+    return await res.json();
+  }
+
+  searchInputHandler = async (value: string) => {
+    const res = await fetch('http://localhost:3000/search',
+      { 
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: value }),
+      });
+    const aaaa = await res.json();
+    console.log("aaaa: ", aaaa);
+  }
+
+  handleSearchInput = (event: object) => {
+    if (this.timer) {
+      clearTimeout(this.timer)
+    }
+    this.timer = setTimeout(this.searchInputHandler, 2000, event.target.value);
   }
 
   render() {
@@ -94,7 +137,10 @@ class RootComponent extends React.Component {
           onClick={this.handleMenu}
           color="inherit"
         >
-          <AccountCircle />
+          {this.state.isAuthUser
+            ? <Avatar src={this.state.userAccount.picture}/>
+            : <AccountCircle />
+          }
         </IconButton>
         <Menu
           id="menu-appbar"
@@ -115,6 +161,9 @@ class RootComponent extends React.Component {
           }
           <MenuItem onClick={this.handleClose} disabled={!this.state.isAuthUser}>Profile</MenuItem>
           <MenuItem onClick={this.handleClose} disabled={!this.state.isAuthUser}>My account</MenuItem>
+          {this.state.isAuthUser
+            && <MenuItem onClick={this.appLogout}>Logout</MenuItem>
+          }
         </Menu>
       </div>
     )
@@ -168,6 +217,19 @@ class RootComponent extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               {this.state.toolBarText}
             </Typography>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                onChange={this.handleSearchInput}
+              />
+            </div>
             {loginElement}
           </Toolbar>
         </AppBar>
