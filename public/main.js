@@ -9,6 +9,10 @@ function codeAddress() {
     document.getElementById("stop").addEventListener("click", stop);
     document.getElementById("start-track").addEventListener("click", startTrack);
   });
+  DZ.Event.subscribe('player_position', function(e) {
+    localStorage.setItem('trackPosition', e[0]/e[1]);
+    document.getElementById("update-track-line").click();
+  });
   document.getElementById("dz-root").addEventListener("click", getDZObject);
 };
 
@@ -26,7 +30,8 @@ function play() {
 }
 
 function startTrack() {
-  DZ.player.playTracks(['68973465']);
+  const trackId = localStorage.getItem('trackId');
+  DZ.player.playTracks([trackId]);
 }
 
 function stop() {
