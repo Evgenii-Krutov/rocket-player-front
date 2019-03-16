@@ -21,18 +21,16 @@ import { styles } from './styles';
 import HeadsetIcon from '@material-ui/icons/Headset';
 import MusicNote from '@material-ui/icons/MusicNote';
 import SpeakerIcon from '@material-ui/icons/Speaker';
-import RadioIcon from '@material-ui/icons/Radio';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 
 import DeezerMusicComponent from '../DeezerMusicComponent';
 import SoundcloudMusicComponent from '../SoundcloudMusicComponent';
-import CustomRadioComponent from '../CustomRadioComponent';
 import AboutComponent from '../AboutComponent';
 import TrackPlayerComponent from '../TrackPlayerComponent';
 
-const drawerValues = ['Deezer', 'Soundcloud', 'Custom Radio', 'About'];
+const drawerValues = ['Deezer', 'Soundcloud', 'About'];
 
 class RootComponent extends React.Component {
   state = {
@@ -41,6 +39,11 @@ class RootComponent extends React.Component {
     isAuthUser: false,
     anchorEl: null,
     userAccount: {},
+    searchResults: {
+      artists: [],
+      albums: [],
+      tracks: [],
+    },
   };
   timer = null;
 
@@ -115,8 +118,9 @@ class RootComponent extends React.Component {
         },
         body: JSON.stringify({ query: value }),
       });
-    const aaaa = await res.json();
-    console.log("aaaa: ", aaaa);
+    const searchResults = await res.json();
+    this.setState({ searchResults });
+    console.log(searchResults);
   }
 
   handleSearchInput = (event: object) => {
@@ -197,15 +201,9 @@ class RootComponent extends React.Component {
           </ListItem>
           <ListItem button key={drawerValues[2]} onClick={() => this.handleDrawerClick(2)}>
             <ListItemIcon>
-              <RadioIcon />
-            </ListItemIcon>
-            <ListItemText primary={drawerValues[2]} />
-          </ListItem>
-          <ListItem button key={drawerValues[3]} onClick={() => this.handleDrawerClick(3)}>
-            <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
-            <ListItemText primary={drawerValues[3]} />
+            <ListItemText primary={drawerValues[2]} />
           </ListItem>
         </List>
       </div>
@@ -247,10 +245,10 @@ class RootComponent extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          {this.state.pageNumber === 0 && <DeezerMusicComponent />}
+          {this.state.pageNumber === 0 &&
+            <DeezerMusicComponent searchResults={this.state.searchResults}/>}
           {this.state.pageNumber === 1 && <SoundcloudMusicComponent />}
-          {this.state.pageNumber === 2 && <CustomRadioComponent />}
-          {this.state.pageNumber === 3 && <AboutComponent />}
+          {this.state.pageNumber === 2 && <AboutComponent />}
           <TrackPlayerComponent />
         </main>
       </div>
