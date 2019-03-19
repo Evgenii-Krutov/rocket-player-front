@@ -18,6 +18,7 @@ export const styles = theme => ({
     backgroundColor: "#f44336",
     zIndex: 1000,
     opacity: 0.3,
+    transition: "width 1s",
   },
   trackImage: {
     marginLeft: 10,

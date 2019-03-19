@@ -44,6 +44,8 @@ class RootComponent extends React.Component {
       albums: [],
       tracks: [],
     },
+    isPlaying: false,
+    playingId: '',
   };
   timer = null;
 
@@ -106,6 +108,13 @@ class RootComponent extends React.Component {
       body: JSON.stringify({ token: localStorage.getItem("accessToken") }),
     });
     return await res.json();
+  }
+
+  changePlayingState = (condition: boolean) => {
+    this.setState({
+      isPlaying: condition,
+      playingId: localStorage.getItem("trackId"),
+    });
   }
 
   searchInputHandler = async (value: string) => {
@@ -246,10 +255,15 @@ class RootComponent extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {this.state.pageNumber === 0 &&
-            <DeezerMusicComponent searchResults={this.state.searchResults}/>}
+            <DeezerMusicComponent
+              searchResults={this.state.searchResults}
+              isPlaying={this.state.isPlaying}
+              playingId={this.state.playingId}
+            />
+          }
           {this.state.pageNumber === 1 && <SoundcloudMusicComponent />}
           {this.state.pageNumber === 2 && <AboutComponent />}
-          <TrackPlayerComponent />
+          <TrackPlayerComponent changePlayingState={this.changePlayingState}/>
         </main>
       </div>
     );

@@ -31,6 +31,7 @@ function play() {
 
 function startTrack() {
   const trackId = localStorage.getItem('trackId');
+  DZ.player.pause();
   DZ.player.playTracks([trackId]);
 }
 

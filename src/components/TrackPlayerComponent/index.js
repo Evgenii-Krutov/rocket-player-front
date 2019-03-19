@@ -27,15 +27,25 @@ class TrackPlayerComponent extends Component {
   componentDidMount() {
     console.log("PROPS: ", this.props);
     document.getElementById("update-track-line").addEventListener("click", this.updateLine);
+    document.getElementById("load-new-track").addEventListener("click", this.loadNewTrack);
+  }
+
+  loadNewTrack = () => {
+    this.startMusic();
   }
 
   updateLine = () => {
-    const percent = localStorage.getItem('trackPosition');
+    const percent = localStorage.getItem("trackPosition");
+    if(percent === "0" && this.state.isStopped) {
+      this.props.changePlayingState(false);
+    }
     this.setState({ percentage: 1295 * percent });
   }
 
   startMusic = async () => {
-    console.log('a');
+    if (!localStorage.getItem("trackId")) {
+      return;
+    }
     const track = await this.getTrackInfo();
     const trackInfo = {
       title: track.title,
@@ -44,8 +54,9 @@ class TrackPlayerComponent extends Component {
       artist: track.artist.name,
     }
     this.setState({ trackInfo });
-    localStorage.setItem('trackId', '3135556');
     document.getElementById("start-track").click();
+    this.setState({ isStopped: false });
+    this.props.changePlayingState(true);
   }
 
   formatDuration = (seconds) => {
@@ -58,11 +69,13 @@ class TrackPlayerComponent extends Component {
 
   playMusic = async () => {
     this.setState({ isStopped: false });
+    this.props.changePlayingState(true);
     document.getElementById("play").click();
   }
 
   stopMusic = async () => {
     this.setState({ isStopped: true });
+    this.props.changePlayingState(false);
     document.getElementById("stop").click();
   }
 
@@ -74,7 +87,7 @@ class TrackPlayerComponent extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ trackId: '3135556' }),
+      body: JSON.stringify({ trackId: localStorage.getItem("trackId") }),
     });
     return await res.json();
   }

@@ -17,6 +17,7 @@ import { styles } from './styles';
 
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 
 class DeezerMusicComponent extends Component {
   async componentDidMount() {
@@ -24,6 +25,11 @@ class DeezerMusicComponent extends Component {
 
   onCardClick = (type, id) => {
     console.log('DED');
+  }
+
+  onTrackClick = (trackId) => {
+    localStorage.setItem("trackId", trackId);
+    document.getElementById("load-new-track").click();
   }
 
   render() {
@@ -101,10 +107,17 @@ class DeezerMusicComponent extends Component {
                 primary={`${track.artist.name} - ${track.title}`}
               />
               <ListItemSecondaryAction>
-                <IconButton>
-                  <PlayCircleFilledIcon />
-                </IconButton>
-                <IconButton>
+                {track.id.toString() === this.props.playingId && this.props.isPlaying &&
+                  <IconButton color="inherit">
+                    <PauseCircleFilledIcon />
+                  </IconButton>
+                }
+                {(track.id.toString() !== this.props.playingId || !this.props.isPlaying) &&
+                  <IconButton color="inherit" onClick={() => {this.onTrackClick(track.id)}}>
+                    <PlayCircleFilledIcon />
+                  </IconButton>
+                }
+                <IconButton color="inherit">
                   <PlaylistAddIcon />
                 </IconButton>
               </ListItemSecondaryAction>
