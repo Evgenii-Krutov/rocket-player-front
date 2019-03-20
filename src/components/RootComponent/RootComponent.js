@@ -28,9 +28,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import DeezerMusicComponent from '../DeezerMusicComponent';
 import SoundcloudMusicComponent from '../SoundcloudMusicComponent';
 import AboutComponent from '../AboutComponent';
+import ArtistComponent from '../ArtistComponent';
+import AlbumComponent from '../AlbumComponent';
 import TrackPlayerComponent from '../TrackPlayerComponent';
 
-const drawerValues = ['Deezer', 'Soundcloud', 'About'];
+const drawerValues = ["Deezer", "Soundcloud", "About", "Artist", "Album"];
 
 class RootComponent extends React.Component {
   state = {
@@ -46,6 +48,7 @@ class RootComponent extends React.Component {
     },
     isPlaying: false,
     playingId: '',
+    albumOrArtistInfo: {},
   };
   timer = null;
 
@@ -137,6 +140,13 @@ class RootComponent extends React.Component {
       clearTimeout(this.timer)
     }
     this.timer = setTimeout(this.searchInputHandler, 2000, event.target.value);
+  }
+
+  openContextComponent = (type, info) => {
+    this.handleDrawerClick(type);
+    this.setState({
+      albumOrArtistInfo: info,
+    });
   }
 
   render() {
@@ -259,10 +269,13 @@ class RootComponent extends React.Component {
               searchResults={this.state.searchResults}
               isPlaying={this.state.isPlaying}
               playingId={this.state.playingId}
+              openContextComponent={this.openContextComponent}
             />
           }
           {this.state.pageNumber === 1 && <SoundcloudMusicComponent />}
           {this.state.pageNumber === 2 && <AboutComponent />}
+          {this.state.pageNumber === 3 && <ArtistComponent artist={this.state.albumOrArtistInfo} />}
+          {this.state.pageNumber === 4 && <AlbumComponent album={this.state.albumOrArtistInfo} />}
           <TrackPlayerComponent changePlayingState={this.changePlayingState}/>
         </main>
       </div>

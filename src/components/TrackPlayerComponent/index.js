@@ -25,7 +25,6 @@ class TrackPlayerComponent extends Component {
   };
 
   componentDidMount() {
-    console.log("PROPS: ", this.props);
     document.getElementById("update-track-line").addEventListener("click", this.updateLine);
     document.getElementById("load-new-track").addEventListener("click", this.loadNewTrack);
   }

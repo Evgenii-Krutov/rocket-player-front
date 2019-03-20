@@ -23,10 +23,6 @@ class DeezerMusicComponent extends Component {
   async componentDidMount() {
   }
 
-  onCardClick = (type, id) => {
-    console.log('DED');
-  }
-
   onTrackClick = (trackId) => {
     localStorage.setItem("trackId", trackId);
     document.getElementById("load-new-track").click();
@@ -53,7 +49,7 @@ class DeezerMusicComponent extends Component {
           {this.props.searchResults.artists.map(artist => (
             <GridListTile className={classes.gridList} key={artist.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => { this.onCardClick('artist', artist.id) }}>
+                <CardActionArea onClick={() => { this.props.openContextComponent(3, artist) }}>
                   <CardMedia
                     className={classes.media}
                     image={artist.picture_medium}
@@ -77,7 +73,7 @@ class DeezerMusicComponent extends Component {
           {this.props.searchResults.albums.map(album => (
             <GridListTile className={classes.gridList} key={album.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => this.onCardClick('album', album.id)}>
+                <CardActionArea onClick={() => this.props.openContextComponent(4, album)}>
                   <CardMedia
                     className={classes.media}
                     image={album.cover_medium}
