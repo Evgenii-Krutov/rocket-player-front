@@ -42,9 +42,16 @@ class RootComponent extends React.Component {
     anchorEl: null,
     userAccount: {},
     searchResults: {
-      artists: [],
-      albums: [],
-      tracks: [],
+      deezer: {
+        artists: [],
+        albums: [],
+        tracks: [],
+      },
+      soundcloud: {
+        users: [],
+        playlists: [],
+        tracks: [],
+      }
     },
     isPlaying: false,
     playingId: '',
@@ -113,14 +120,14 @@ class RootComponent extends React.Component {
     return await res.json();
   }
 
-  changePlayingState = (condition: boolean) => {
+  changePlayingState = (condition) => {
     this.setState({
       isPlaying: condition,
       playingId: localStorage.getItem("trackId"),
     });
   }
 
-  searchInputHandler = async (value: string) => {
+  searchInputHandler = async (value) => {
     const res = await fetch('http://localhost:3000/search',
       { 
         method: "POST",
@@ -132,10 +139,9 @@ class RootComponent extends React.Component {
       });
     const searchResults = await res.json();
     this.setState({ searchResults });
-    console.log(searchResults);
   }
 
-  handleSearchInput = (event: object) => {
+  handleSearchInput = (event) => {
     if (this.timer) {
       clearTimeout(this.timer)
     }
@@ -272,7 +278,14 @@ class RootComponent extends React.Component {
               openContextComponent={this.openContextComponent}
             />
           }
-          {this.state.pageNumber === 1 && <SoundcloudMusicComponent />}
+          {this.state.pageNumber === 1 &&
+            <SoundcloudMusicComponent
+              searchResults={this.state.searchResults}
+              isPlaying={this.state.isPlaying}
+              playingId={this.state.playingId}
+              openContextComponent={this.openContextComponent}
+            />
+          }
           {this.state.pageNumber === 2 && <AboutComponent />}
           {this.state.pageNumber === 3 && <ArtistComponent artist={this.state.albumOrArtistInfo} />}
           {this.state.pageNumber === 4 && <AlbumComponent album={this.state.albumOrArtistInfo} />}

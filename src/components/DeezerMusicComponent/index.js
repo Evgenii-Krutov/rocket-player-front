@@ -33,20 +33,20 @@ class DeezerMusicComponent extends Component {
 
     return (
       <div className={classes.deezerMain}>
-        {this.props.searchResults.artists.length === 0 &&
-          this.props.searchResults.artists.length === 0 &&
-          this.props.searchResults.artists.length === 0 &&
+        {this.props.searchResults.deezer.artists.length === 0 &&
+          this.props.searchResults.deezer.albums.length === 0 &&
+          this.props.searchResults.deezer.tracks.length === 0 &&
           <Typography variant="subheading" color="textSecondary" className={classes.deezerEmptyResults}>
             No results for any of categories
           </Typography>
         }
-        {this.props.searchResults.artists.length !== 0 &&
+        {this.props.searchResults.deezer.artists.length !== 0 &&
           <Typography variant="subheading" color="textSecondary" className={classes.deezerCategory}>
             Artists
           </Typography>
         }
         <GridList cellHeight={190} cols={6}>
-          {this.props.searchResults.artists.map(artist => (
+          {this.props.searchResults.deezer.artists.map(artist => (
             <GridListTile className={classes.gridList} key={artist.id} cols={1}>
               <Card className={classes.card}>
                 <CardActionArea onClick={() => { this.props.openContextComponent(3, artist) }}>
@@ -64,13 +64,13 @@ class DeezerMusicComponent extends Component {
             </GridListTile>
           ))}
         </GridList>
-        {this.props.searchResults.albums.length !== 0 &&
+        {this.props.searchResults.deezer.albums.length !== 0 &&
           <Typography variant="subheading" color="textSecondary" className={classes.deezerCategory}>
             Albums
           </Typography>
         }
         <GridList cellHeight={190} cols={6}>
-          {this.props.searchResults.albums.map(album => (
+          {this.props.searchResults.deezer.albums.map(album => (
             <GridListTile className={classes.gridList} key={album.id} cols={1}>
               <Card className={classes.card}>
                 <CardActionArea onClick={() => this.props.openContextComponent(4, album)}>
@@ -88,13 +88,13 @@ class DeezerMusicComponent extends Component {
             </GridListTile>
           ))}
         </GridList>
-        {this.props.searchResults.tracks.length !== 0 &&
+        {this.props.searchResults.deezer.tracks.length !== 0 &&
           <Typography variant="subheading" color="textSecondary" className={classes.deezerCategory}>
             Tracks
           </Typography>
         }
         <List dense={true}>
-          {this.props.searchResults.tracks.map(track => (
+          {this.props.searchResults.deezer.tracks.map(track => (
             <ListItem>
               <ListItemAvatar>
                 <img src={track.album.cover_medium} alt="" />
