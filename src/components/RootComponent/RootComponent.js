@@ -155,9 +155,14 @@ class RootComponent extends React.Component {
     });
   }
 
-  onTrackClick = (trackId) => {
+  onTrackClick = (trackId, type) => {
     localStorage.setItem("trackId", trackId);
-    document.getElementById("load-new-track").click();
+    if (type === "deezer") {
+      document.getElementById("load-new-track").click();
+    }
+    if (type === "soundcloud") {
+      document.getElementById("sc-load-new-track").click();
+    }
   }
 
   render() {

@@ -106,7 +106,7 @@ class SoundcloudMusicComponent extends Component {
                   </IconButton>
                 }
                 {(track.id.toString() !== this.props.playingId || !this.props.isPlaying) &&
-                  <IconButton color="inherit" onClick={() => {this.props.onTrackClick(track.id)}}>
+                  <IconButton color="inherit" onClick={() => {this.props.onTrackClick(track.id, "soundcloud")}}>
                     <PlayCircleFilledIcon />
                   </IconButton>
                 }

@@ -27,10 +27,15 @@ class TrackPlayerComponent extends Component {
   componentDidMount() {
     document.getElementById("update-track-line").addEventListener("click", this.updateLine);
     document.getElementById("load-new-track").addEventListener("click", this.loadNewTrack);
+    document.getElementById("sc-load-new-track").addEventListener("click", this.scLoadNewTrack);
   }
 
   loadNewTrack = () => {
     this.startMusic();
+  }
+
+  scLoadNewTrack = () => {
+    this.scStartMusic();
   }
 
   updateLine = () => {
@@ -45,7 +50,7 @@ class TrackPlayerComponent extends Component {
     if (!localStorage.getItem("trackId")) {
       return;
     }
-    const track = await this.getTrackInfo();
+    const track = await this.getTrackInfo("deezer");
     const trackInfo = {
       title: track.title,
       duration: this.formatDuration(track.duration),
@@ -54,6 +59,23 @@ class TrackPlayerComponent extends Component {
     }
     this.setState({ trackInfo });
     document.getElementById("start-track").click();
+    this.setState({ isStopped: false });
+    this.props.changePlayingState(true);
+  }
+
+  scStartMusic = async () => {
+    if (!localStorage.getItem("trackId")) {
+      return;
+    }
+    const track = await this.getTrackInfo("soundcloud");
+    const trackInfo = {
+      title: track.title,
+      duration: this.formatDuration(Math.round(track.duration/1000)),
+      image: track.artwork_url,
+      artist: "",
+    }
+    this.setState({ trackInfo });
+    document.getElementById("sc-start-track").click();
     this.setState({ isStopped: false });
     this.props.changePlayingState(true);
   }
@@ -78,7 +100,7 @@ class TrackPlayerComponent extends Component {
     document.getElementById("stop").click();
   }
 
-  getTrackInfo = async () => {
+  getTrackInfo = async (type) => {
     const res = await fetch('http://localhost:3000/getTrack',
     { 
       method: "POST",
@@ -86,7 +108,7 @@ class TrackPlayerComponent extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ trackId: localStorage.getItem("trackId") }),
+      body: JSON.stringify({ trackId: localStorage.getItem("trackId"), type }),
     });
     return await res.json();
   }

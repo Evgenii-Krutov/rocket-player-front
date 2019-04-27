@@ -1,13 +1,20 @@
-function codeAddress() {
+var soundcloudPlayer;
+function initMusicServices() {
   DZ.init({
     appId: '333062',
     channelUrl: 'http://localhost/channel.html',
     player: {}
   });
+  SC.initialize({
+    client_id: '95f22ed54a5c297b1c41f72d713623ef'
+  });
   DZ.ready(function (_sdk_options) {
     document.getElementById("play").addEventListener("click", play);
     document.getElementById("stop").addEventListener("click", stop);
     document.getElementById("start-track").addEventListener("click", startTrack);
+    document.getElementById("sc-play").addEventListener("click", scPlay);
+    document.getElementById("sc-stop").addEventListener("click", scStop);
+    document.getElementById("sc-start-track").addEventListener("click", scStartTrack);
   });
   DZ.Event.subscribe('player_position', function(e) {
     localStorage.setItem('trackPosition', e[0]/e[1]);
@@ -37,4 +44,33 @@ function startTrack() {
 
 function stop() {
   DZ.player.pause();
+}
+
+function scStartTrack() {
+  const trackId = localStorage.getItem('trackId');
+  return SC.stream('/tracks/' + trackId).then(function(player){
+    if (soundcloudPlayer) {
+      soundcloudPlayer.pause();
+    }
+    soundcloudPlayer = window.soundcloudPlayer = player;
+    scPlay();
+  }).catch(function(e){
+    console.error(e);
+  });
+};
+
+function scPlay() {
+  if (soundcloudPlayer) {
+    soundcloudPlayer.play().catch(function(e){
+      console.error('Playback rejected.', e);
+    });
+  }
+}
+
+function scStop() {
+  if (soundcloudPlayer) {
+    soundcloudPlayer.pause().catch(function(e){
+      console.error('An error occured.', e);
+    });
+  }
 }
