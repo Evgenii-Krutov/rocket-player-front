@@ -109,14 +109,14 @@ class RootComponent extends React.Component {
 
   getUserInformation = async () => {
     const res = await fetch('http://localhost:3000/getUser',
-    { 
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: localStorage.getItem("accessToken") }),
-    });
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: localStorage.getItem("accessToken") }),
+      });
     return await res.json();
   }
 
@@ -129,7 +129,7 @@ class RootComponent extends React.Component {
 
   searchInputHandler = async (value) => {
     const res = await fetch('http://localhost:3000/search',
-      { 
+      {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -155,6 +155,11 @@ class RootComponent extends React.Component {
     });
   }
 
+  onTrackClick = (trackId) => {
+    localStorage.setItem("trackId", trackId);
+    document.getElementById("load-new-track").click();
+  }
+
   render() {
     const { classes } = this.props;
     const open = Boolean(this.state.anchorEl);
@@ -168,7 +173,7 @@ class RootComponent extends React.Component {
           color="inherit"
         >
           {this.state.isAuthUser
-            ? <Avatar src={this.state.userAccount.picture}/>
+            ? <Avatar src={this.state.userAccount.picture} />
             : <AccountCircle />
           }
         </IconButton>
@@ -201,14 +206,14 @@ class RootComponent extends React.Component {
     const drawer = (
       <div>
         <div className={classes.toolbar}>
-            <List>
-              <ListItem key='Rocket Player'>
-                <Avatar className={classes.orangeAvatar}>
-                  <MusicNote />
-                </Avatar>
-                <ListItemText primary='Rocket Player' />
-              </ListItem>
-            </List>
+          <List>
+            <ListItem key='Rocket Player'>
+              <Avatar className={classes.orangeAvatar}>
+                <MusicNote />
+              </Avatar>
+              <ListItemText primary='Rocket Player' />
+            </ListItem>
+          </List>
         </div>
         <Divider />
         <List>
@@ -275,6 +280,7 @@ class RootComponent extends React.Component {
               searchResults={this.state.searchResults}
               isPlaying={this.state.isPlaying}
               playingId={this.state.playingId}
+              onTrackClick={this.onTrackClick}
               openContextComponent={this.openContextComponent}
             />
           }
@@ -283,13 +289,24 @@ class RootComponent extends React.Component {
               searchResults={this.state.searchResults}
               isPlaying={this.state.isPlaying}
               playingId={this.state.playingId}
+              onTrackClick={this.onTrackClick}
               openContextComponent={this.openContextComponent}
             />
           }
           {this.state.pageNumber === 2 && <AboutComponent />}
-          {this.state.pageNumber === 3 && <ArtistComponent artist={this.state.albumOrArtistInfo} />}
-          {this.state.pageNumber === 4 && <AlbumComponent album={this.state.albumOrArtistInfo} />}
-          <TrackPlayerComponent changePlayingState={this.changePlayingState}/>
+          {this.state.pageNumber === 3 && <ArtistComponent
+            artist={this.state.albumOrArtistInfo}
+            isPlaying={this.state.isPlaying}
+            playingId={this.state.playingId}
+            onTrackClick={this.onTrackClick}
+          />}
+          {this.state.pageNumber === 4 && <AlbumComponent
+            album={this.state.albumOrArtistInfo}
+            isPlaying={this.state.isPlaying}
+            playingId={this.state.playingId}
+            onTrackClick={this.onTrackClick}
+          />}
+          <TrackPlayerComponent changePlayingState={this.changePlayingState} />
         </main>
       </div>
     );

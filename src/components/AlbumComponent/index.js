@@ -34,20 +34,18 @@ class AlbumComponent extends Component {
         });
       const genreResult = await res.json();
       this.setState({ genre: genreResult.name });
-
-      const tracksResponse = await fetch('http://localhost:3000/getAlbumTracks',
-        {
-          method: "POST",
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ tracks: this.props.album.tracklist }),
-        });
-      const tracks = await tracksResponse.json();
-      console.log("TRACKS: ", tracks);
-      this.setState({ albumTracks: tracks.data });
     }
+    const tracksResponse = await fetch('http://localhost:3000/getAlbumTracks',
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tracks: this.props.album.tracklist }),
+      });
+    const tracks = await tracksResponse.json();
+    this.setState({ albumTracks: tracks.data });
   }
 
   formatDuration = (seconds) => {
@@ -101,20 +99,20 @@ class AlbumComponent extends Component {
                             {this.formatDuration(track.duration)}
                           </Typography>
                         </div>
+                        {track.id.toString() === this.props.playingId && this.props.isPlaying &&
+                          <IconButton color="inherit">
+                            <PauseCircleFilledIcon />
+                          </IconButton>
+                        }
+                        {(track.id.toString() !== this.props.playingId || !this.props.isPlaying) &&
+                          <IconButton color="inherit" onClick={() => { this.props.onTrackClick(track.id) }}>
+                            <PlayCircleFilledIcon />
+                          </IconButton>
+                        }
                         <IconButton color="inherit">
                           <PlaylistAddIcon />
                         </IconButton>
                       </div>
-                      {/* {track.id.toString() === this.props.playingId && this.props.isPlaying &&
-                      <IconButton color="inherit">
-                        <PauseCircleFilledIcon />
-                      </IconButton>
-                    }
-                    {(track.id.toString() !== this.props.playingId || !this.props.isPlaying) &&
-                      <IconButton color="inherit" onClick={() => { this.onTrackClick(track.id) }}>
-                        <PlayCircleFilledIcon />
-                      </IconButton>
-                    } */}
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}

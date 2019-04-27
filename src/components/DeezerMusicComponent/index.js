@@ -23,11 +23,6 @@ class DeezerMusicComponent extends Component {
   async componentDidMount() {
   }
 
-  onTrackClick = (trackId) => {
-    localStorage.setItem("trackId", trackId);
-    document.getElementById("load-new-track").click();
-  }
-
   render() {
     const { classes } = this.props;
 
@@ -109,7 +104,7 @@ class DeezerMusicComponent extends Component {
                   </IconButton>
                 }
                 {(track.id.toString() !== this.props.playingId || !this.props.isPlaying) &&
-                  <IconButton color="inherit" onClick={() => {this.onTrackClick(track.id)}}>
+                  <IconButton color="inherit" onClick={() => {this.props.onTrackClick(track.id)}}>
                     <PlayCircleFilledIcon />
                   </IconButton>
                 }
