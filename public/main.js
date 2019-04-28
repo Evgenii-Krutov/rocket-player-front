@@ -49,6 +49,12 @@ function stop() {
 function scStartTrack() {
   const trackId = localStorage.getItem('trackId');
   return SC.stream('/tracks/' + trackId).then(function(player){
+    player.on("time", function(e) {
+      const duration = player.getDuration();
+      var percent = Math.round(e/1000)/Math.round(duration/1000)
+      localStorage.setItem('trackPosition', percent);
+      document.getElementById("update-track-line").click();
+    });
     if (soundcloudPlayer) {
       soundcloudPlayer.pause();
     }
