@@ -31,8 +31,9 @@ import AboutComponent from '../AboutComponent';
 import ArtistComponent from '../ArtistComponent';
 import AlbumComponent from '../AlbumComponent';
 import TrackPlayerComponent from '../TrackPlayerComponent';
+import PlaylistsComponent from '../PlaylistsComponent';
 
-const drawerValues = ["Deezer", "Soundcloud", "About", "Artist", "Album"];
+const drawerValues = ["Deezer", "Soundcloud", "About", "Artist", "Album", "Playlists"];
 
 class RootComponent extends React.Component {
   state = {
@@ -150,6 +151,7 @@ class RootComponent extends React.Component {
 
   openContextComponent = (type, info) => {
     this.handleDrawerClick(type);
+    this.handleClose();
     this.setState({
       albumOrArtistInfo: info,
     });
@@ -199,8 +201,7 @@ class RootComponent extends React.Component {
           {!this.state.isAuthUser
             && <MenuItem onClick={this.appLogin}>Login</MenuItem>
           }
-          <MenuItem onClick={this.handleClose} disabled={!this.state.isAuthUser}>Profile</MenuItem>
-          <MenuItem onClick={this.handleClose} disabled={!this.state.isAuthUser}>My account</MenuItem>
+          <MenuItem onClick={() => this.handleDrawerClick(5)} disabled={!this.state.isAuthUser}>Playlists</MenuItem>
           {this.state.isAuthUser
             && <MenuItem onClick={this.appLogout}>Logout</MenuItem>
           }
@@ -311,6 +312,7 @@ class RootComponent extends React.Component {
             playingId={this.state.playingId}
             onTrackClick={this.onTrackClick}
           />}
+          {this.state.pageNumber === 5 && <PlaylistsComponent />}
           <TrackPlayerComponent changePlayingState={this.changePlayingState} />
         </main>
       </div>
