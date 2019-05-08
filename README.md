@@ -1,10 +1,14 @@
 Diplom project.<br>
 Aggregator of music services (sych as Deezer, Soundcloud, etc.)
 
-### `npm start`
+To start front-end version of project, run:
+1. Install modules with command `npm install`
+2. Start application with command `npm run start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost](http://localhost) to view project in the browser.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+To start back-end version of project, run in folder rocket-player-back:
+1. Install modules with command `npm install`
+2. Start application with command `npm run start`
+
+After that, back-end version will listen to 3000 port.
