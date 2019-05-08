@@ -159,7 +159,7 @@ class PlaylistsComponent extends Component {
           {this.state.playlists.deezer.map(playlist => (
             <GridListTile className={classes.gridList} key={playlist.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => { this.props.openContextComponent(6, playlist) }}>
+                <CardActionArea onClick={() => { this.props.openPlaylistComponent(6, playlist) }}>
                   <CardMedia
                     className={classes.media}
                     image={DEFAULT_IMAGE_URL}
@@ -183,7 +183,7 @@ class PlaylistsComponent extends Component {
           {this.state.playlists.soundcloud.map(playlist => (
             <GridListTile className={classes.gridList} key={playlist.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => { this.props.openContextComponent(6, playlist) }}>
+                <CardActionArea onClick={() => { this.props.openPlaylistComponent(6, playlist) }}>
                   <CardMedia
                     className={classes.media}
                     image={DEFAULT_IMAGE_URL}

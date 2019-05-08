@@ -32,8 +32,9 @@ import ArtistComponent from '../ArtistComponent';
 import AlbumComponent from '../AlbumComponent';
 import TrackPlayerComponent from '../TrackPlayerComponent';
 import PlaylistsComponent from '../PlaylistsComponent';
+import PlaylistComponent from '../PlaylistComponent';
 
-const drawerValues = ["Deezer", "Soundcloud", "About", "Artist", "Album", "Playlists"];
+const drawerValues = ["Deezer", "Soundcloud", "About", "Artist", "Album", "Playlists", "Playlist"];
 
 class RootComponent extends React.Component {
   state = {
@@ -57,6 +58,7 @@ class RootComponent extends React.Component {
     isPlaying: false,
     playingId: '',
     albumOrArtistInfo: {},
+    playlistInfo: {},
   };
   timer = null;
 
@@ -154,6 +156,14 @@ class RootComponent extends React.Component {
     this.handleClose();
     this.setState({
       albumOrArtistInfo: info,
+    });
+  }
+
+  openPlaylistComponent = (type, playlist) => {
+    this.handleDrawerClick(type);
+    this.handleClose();
+    this.setState({
+      playlistInfo: playlist,
     });
   }
 
@@ -312,7 +322,13 @@ class RootComponent extends React.Component {
             playingId={this.state.playingId}
             onTrackClick={this.onTrackClick}
           />}
-          {this.state.pageNumber === 5 && <PlaylistsComponent />}
+          {this.state.pageNumber === 5 && <PlaylistsComponent
+            openPlaylistComponent={this.openPlaylistComponent}
+          />}
+          {this.state.pageNumber === 6 && <PlaylistComponent
+            playlist={this.state.playlistInfo}
+            backToPlaylists={this.handleDrawerClick}
+          />}
           <TrackPlayerComponent changePlayingState={this.changePlayingState} />
         </main>
       </div>
