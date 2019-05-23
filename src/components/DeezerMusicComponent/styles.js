@@ -14,5 +14,8 @@ export const styles = theme => ({
   },
   deezerMain: {
     marginBottom: 80,
+  },
+  playlistsModalMain: {
+    minWidth: 300,
   }
 });

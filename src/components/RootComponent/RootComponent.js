@@ -43,6 +43,10 @@ class RootComponent extends React.Component {
     isAuthUser: false,
     anchorEl: null,
     userAccount: {},
+    playlists: {
+      deezer: [],
+      soundcloud: [],
+    },
     searchResults: {
       deezer: {
         artists: [],
@@ -65,6 +69,8 @@ class RootComponent extends React.Component {
   async componentDidMount() {
     if (localStorage.getItem("accessToken")) {
       const userInfo = await this.getUserInformation();
+      const playlists = await this.getPlaylists();
+      this.setState({ playlists });
       if (!userInfo.error) {
         this.setState({
           userAccount: userInfo,
@@ -121,6 +127,18 @@ class RootComponent extends React.Component {
         body: JSON.stringify({ token: localStorage.getItem("accessToken") }),
       });
     return await res.json();
+  }
+
+  getPlaylists = async () => {
+    const res = await fetch('http://localhost:3000/getPlaylists',
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+    return await res.json();    
   }
 
   changePlayingState = (condition) => {
@@ -297,6 +315,7 @@ class RootComponent extends React.Component {
               isPlaying={this.state.isPlaying}
               playingId={this.state.playingId}
               onTrackClick={this.onTrackClick}
+              playlists={this.state.playlists}
               openContextComponent={this.openContextComponent}
             />
           }
@@ -306,6 +325,7 @@ class RootComponent extends React.Component {
               isPlaying={this.state.isPlaying}
               playingId={this.state.playingId}
               onTrackClick={this.onTrackClick}
+              playlists={this.state.playlists}
               openContextComponent={this.openContextComponent}
             />
           }

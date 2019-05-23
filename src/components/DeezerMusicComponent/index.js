@@ -12,6 +12,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import Slide from '@material-ui/core/Slide';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { styles } from './styles';
 
@@ -19,8 +25,42 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 class DeezerMusicComponent extends Component {
+  state = {
+    modalOpen: false,
+    track: {},
+  };
+
   async componentDidMount() {
+  }
+
+  handleClickOpen = (track) => {
+    this.setState({ track, modalOpen: true });
+  };
+
+  handleClose = () => {
+    this.setState({ modalOpen: false });
+  };
+
+  addTrackToPlaylist = async (playlistId) => {
+    await fetch('http://localhost:3000/addTrackToPlaylist',
+    {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        name: `${this.state.track.artist.name} - ${this.state.track.title}`,
+        playlistId,
+        avatar: this.state.track.album.cover_medium,
+       }),
+    });
+    this.handleClose();
   }
 
   render() {
@@ -40,6 +80,32 @@ class DeezerMusicComponent extends Component {
             Artists
           </Typography>
         }
+        <Dialog
+          open={this.state.modalOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {"User Playlists"}
+          </DialogTitle>
+          <DialogContent className={classes.playlistsModalMain}>
+            <List>
+              {this.props.playlists.deezer.map(playlist => (
+                <ListItem button key={playlist.id} onClick={() => this.addTrackToPlaylist(playlist.id)}>
+                  <ListItemText primary={playlist.name} />
+                </ListItem>
+              ))}
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
         <GridList cellHeight={190} cols={6}>
           {this.props.searchResults.deezer.artists.map(artist => (
             <GridListTile className={classes.gridList} key={artist.id} cols={1}>
@@ -104,11 +170,11 @@ class DeezerMusicComponent extends Component {
                   </IconButton>
                 }
                 {(track.id.toString() !== this.props.playingId || !this.props.isPlaying) &&
-                  <IconButton color="inherit" onClick={() => {this.props.onTrackClick(track.id, "deezer")}}>
+                  <IconButton color="inherit" onClick={() => this.props.onTrackClick(track.id, "deezer")}>
                     <PlayCircleFilledIcon />
                   </IconButton>
                 }
-                <IconButton color="inherit">
+                <IconButton color="inherit" onClick={() => this.handleClickOpen(track)}>
                   <PlaylistAddIcon />
                 </IconButton>
               </ListItemSecondaryAction>
