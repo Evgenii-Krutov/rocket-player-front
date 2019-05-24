@@ -14,11 +14,14 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
+import PlaylistModalComponent from '../PlaylistModalComponent/index';
 
 class ArtistComponent extends Component {
   state = {
     genre: "",
     artistTracks: [],
+    modalOpen: false,
+    track: {},
   };
 
   async componentDidMount() {
@@ -35,6 +38,14 @@ class ArtistComponent extends Component {
     this.setState({ artistTracks: tracks.data });
   }
 
+  handleClickOpen = (track) => {
+    this.setState({ track, modalOpen: true });
+  };
+
+  handleClose = () => {
+    this.setState({ modalOpen: false });
+  };
+
   formatDuration = (seconds) => {
     const minutes = Math.trunc(seconds / 60);
     const durSeconds = seconds - minutes * 60;
@@ -48,6 +59,11 @@ class ArtistComponent extends Component {
 
     return (
       <div>
+        <PlaylistModalComponent
+          modalOpen={this.state.modalOpen}
+          track={this.state.track}
+          handleClose={this.handleClose}
+        />
         <GridList className={classes.gridList} cellHeight={570} cols={3}>
           <div cols={1}>
             <Paper className={classes.infoColumn}>
@@ -96,7 +112,7 @@ class ArtistComponent extends Component {
                             <PlayCircleFilledIcon />
                           </IconButton>
                         }
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" onClick={() => this.handleClickOpen(track)}>
                           <PlaylistAddIcon />
                         </IconButton>
                       </div>
