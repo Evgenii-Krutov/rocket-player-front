@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
 import ListItemText from '@material-ui/core/ListItemText';
 import { styles } from './styles';
 
@@ -17,10 +18,7 @@ function Transition(props) {
 
 class PlaylistModalComponent extends Component {
   state = {
-    playlists: {
-      deezer: [],
-      soundcloud: [],
-    },
+    playlists: []
   };
 
   async componentDidMount() {
@@ -33,11 +31,15 @@ class PlaylistModalComponent extends Component {
         },
       });
     const resultData = await res.json();
-    this.setState({ playlists: resultData})  
+    if (this.props.type === "deezer") {
+      this.setState({ playlists: resultData.deezer });
+    } else {
+      this.setState({ playlists: resultData.soundcloud });
+    }
   }
 
   addTrackToPlaylist = async (playlistId) => {
-    console.log("TRACK: ", this.props.track);
+    console.log(this.props.track);
     await fetch('http://localhost:3000/addTrackToPlaylist',
       {
         method: "POST",
@@ -46,10 +48,8 @@ class PlaylistModalComponent extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: `${this.props.track.artist.name} - ${this.props.track.title}`,
-          playlistId,
-          avatar: this.props.track.album.cover_medium,
-          playingId: this.props.track.id
+          ...this.props.track,
+          playlistId
         }),
       });
     this.props.handleClose();
@@ -57,7 +57,6 @@ class PlaylistModalComponent extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log("MASLJLKFAS: ", this.props.modalOpen);
     return (
       <Dialog
         open={this.props.modalOpen}
@@ -71,8 +70,13 @@ class PlaylistModalComponent extends Component {
           {"User Playlists"}
         </DialogTitle>
         <DialogContent className={classes.playlistsModalMain}>
+          {this.state.playlists.length === 0 &&
+            <Typography variant="subheading" color="textSecondary" className={classes.playlistsEmpty}>
+              You don't create any of playlists in this type
+            </Typography>
+          }
           <List>
-            {this.state.playlists.deezer.map(playlist => (
+            {this.state.playlists.map(playlist => (
               <ListItem button key={playlist.id} onClick={() => this.addTrackToPlaylist(playlist.id)}>
                 <ListItemText primary={playlist.name} />
               </ListItem>

@@ -30,7 +30,12 @@ class DeezerMusicComponent extends Component {
   }
 
   handleClickOpen = (track) => {
-    this.setState({ track, modalOpen: true });
+    const formattedTrack = {
+      name: `${track.artist.name} - ${track.title}`,
+      avatar: track.album.cover_medium,
+      playingId: track.id
+    };
+    this.setState({ track: formattedTrack, modalOpen: true });
   };
 
   handleClose = () => {
@@ -58,12 +63,13 @@ class DeezerMusicComponent extends Component {
           modalOpen={this.state.modalOpen}
           track={this.state.track}
           handleClose={this.handleClose}
+          type={"deezer"}
         />
         <GridList cellHeight={190} cols={6}>
           {this.props.searchResults.deezer.artists.map(artist => (
             <GridListTile className={classes.gridList} key={artist.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => { this.props.openContextComponent(3, artist) }}>
+                <CardActionArea onClick={() => { this.props.openContextComponent(3, artist, "deezer") }}>
                   <CardMedia
                     className={classes.media}
                     image={artist.picture_medium}
@@ -87,7 +93,7 @@ class DeezerMusicComponent extends Component {
           {this.props.searchResults.deezer.albums.map(album => (
             <GridListTile className={classes.gridList} key={album.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => this.props.openContextComponent(4, album)}>
+                <CardActionArea onClick={() => this.props.openContextComponent(4, album, "deezer")}>
                   <CardMedia
                     className={classes.media}
                     image={album.cover_medium}

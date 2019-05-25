@@ -63,6 +63,7 @@ class ArtistComponent extends Component {
           modalOpen={this.state.modalOpen}
           track={this.state.track}
           handleClose={this.handleClose}
+          type={this.props.serviceType}
         />
         <GridList className={classes.gridList} cellHeight={570} cols={3}>
           <div cols={1}>

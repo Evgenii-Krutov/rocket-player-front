@@ -43,6 +43,7 @@ class RootComponent extends React.Component {
     isAuthUser: false,
     anchorEl: null,
     userAccount: {},
+    serviceType: "",
     playlists: {
       deezer: [],
       soundcloud: [],
@@ -155,8 +156,11 @@ class RootComponent extends React.Component {
     this.timer = setTimeout(this.searchInputHandler, 2000, event.target.value);
   }
 
-  openContextComponent = (type, info) => {
-    this.handleDrawerClick(type);
+  openContextComponent = (pageIndex, info, type) => {
+    this.handleDrawerClick(pageIndex);
+    this.setState({
+      serviceType: type,
+    });
     this.handleClose();
     this.setState({
       albumOrArtistInfo: info,
@@ -321,12 +325,14 @@ class RootComponent extends React.Component {
             isPlaying={this.state.isPlaying}
             playingId={this.state.playingId}
             onTrackClick={this.onTrackClick}
+            serviceType={this.state.serviceType}
           />}
           {this.state.pageNumber === 4 && <AlbumComponent
             album={this.state.albumOrArtistInfo}
             isPlaying={this.state.isPlaying}
             playingId={this.state.playingId}
             onTrackClick={this.onTrackClick}
+            serviceType={this.state.serviceType}
           />}
           {this.state.pageNumber === 5 && <PlaylistsComponent
             openPlaylistComponent={this.openPlaylistComponent}

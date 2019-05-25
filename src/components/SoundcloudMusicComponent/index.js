@@ -18,12 +18,31 @@ import { styles } from './styles';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
+import PlaylistModalComponent from '../PlaylistModalComponent/index';
 
 const DEFAULT_IMAGE_URL = 'https://cdn.spindizzyrecords.com/uploads/2017/07/default-release-cd.png';
 
 class SoundcloudMusicComponent extends Component {
+  state = {
+    modalOpen: false,
+    track: {},
+  };
+
   async componentDidMount() {
   }
+
+  handleClickOpen = (track) => {
+    const formattedTrack = {
+      name: track.title,
+      avatar: track.artwork_url || DEFAULT_IMAGE_URL,
+      playingId: track.id
+    };
+    this.setState({ track: formattedTrack, modalOpen: true });
+  };
+
+  handleClose = () => {
+    this.setState({ modalOpen: false });
+  };
 
   render() {
     const { classes } = this.props;
@@ -42,11 +61,17 @@ class SoundcloudMusicComponent extends Component {
             People
           </Typography>
         }
+        <PlaylistModalComponent
+          modalOpen={this.state.modalOpen}
+          track={this.state.track}
+          handleClose={this.handleClose}
+          type={"soundcloud"}
+        />
         <GridList cellHeight={190} cols={6}>
           {this.props.searchResults.soundcloud.users.map(user => (
             <GridListTile className={classes.gridList} key={user.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => { this.props.openContextComponent(3, user) }}>
+                <CardActionArea onClick={() => { this.props.openContextComponent(3, user, "soundcloud") }}>
                   <CardMedia
                     className={classes.media}
                     image={user.avatar_url}
@@ -70,7 +95,7 @@ class SoundcloudMusicComponent extends Component {
           {this.props.searchResults.soundcloud.playlists.map(playlist => (
             <GridListTile className={classes.gridList} key={playlist.id} cols={1}>
               <Card className={classes.card}>
-                <CardActionArea onClick={() => this.props.openContextComponent(4, playlist)}>
+                <CardActionArea onClick={() => this.props.openContextComponent(4, playlist, "soundcloud")}>
                   <CardMedia
                     className={classes.media}
                     image={playlist.artwork_url || DEFAULT_IMAGE_URL}
@@ -110,7 +135,7 @@ class SoundcloudMusicComponent extends Component {
                     <PlayCircleFilledIcon />
                   </IconButton>
                 }
-                <IconButton color="inherit">
+                <IconButton color="inherit" onClick={() => this.handleClickOpen(track)}>
                   <PlaylistAddIcon />
                 </IconButton>
               </ListItemSecondaryAction>
