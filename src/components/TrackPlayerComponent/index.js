@@ -63,6 +63,14 @@ class TrackPlayerComponent extends Component {
     this.props.changePlayingState(true);
   }
 
+  formatDuration = (seconds) => {
+    const minutes = Math.trunc(seconds/60);
+    const durSeconds = seconds - minutes * 60;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = durSeconds < 10 ? `0${durSeconds}` : durSeconds;
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+
   scStartMusic = async () => {
     if (!localStorage.getItem("trackId")) {
       return;
@@ -80,24 +88,18 @@ class TrackPlayerComponent extends Component {
     this.props.changePlayingState(true);
   }
 
-  formatDuration = (seconds) => {
-    const minutes = Math.trunc(seconds/60);
-    const durSeconds = seconds - minutes * 60;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    const formattedSeconds = durSeconds < 10 ? `0${durSeconds}` : durSeconds;
-    return `${formattedMinutes}:${formattedSeconds}`;
-  }
-
   playMusic = async () => {
     this.setState({ isStopped: false });
     this.props.changePlayingState(true);
-    document.getElementById("play").click();
+    const playId = this.props.serviceType === "deezer" ? "play" : "sc-play";
+    document.getElementById(playId).click();
   }
 
   stopMusic = async () => {
     this.setState({ isStopped: true });
     this.props.changePlayingState(false);
-    document.getElementById("stop").click();
+    const stopId = this.props.serviceType === "deezer" ? "stop" : "sc-stop";
+    document.getElementById(stopId).click();
   }
 
   getTrackInfo = async (type) => {

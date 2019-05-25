@@ -44,6 +44,7 @@ class RootComponent extends React.Component {
     anchorEl: null,
     userAccount: {},
     serviceType: "",
+    playingType: "",
     playlists: {
       deezer: [],
       soundcloud: [],
@@ -167,8 +168,8 @@ class RootComponent extends React.Component {
     });
   }
 
-  openPlaylistComponent = (type, playlist) => {
-    this.handleDrawerClick(type);
+  openPlaylistComponent = (pageIndex, playlist) => {
+    this.handleDrawerClick(pageIndex);
     this.handleClose();
     this.setState({
       playlistInfo: playlist,
@@ -177,10 +178,13 @@ class RootComponent extends React.Component {
 
   onTrackClick = (trackId, type) => {
     localStorage.setItem("trackId", trackId);
+
     if (type === "deezer") {
+      this.setState({ playingType: "deezer" });
       document.getElementById("load-new-track").click();
     }
     if (type === "soundcloud") {
+      this.setState({ playingType: "soundcloud" });
       document.getElementById("sc-load-new-track").click();
     }
   }
@@ -339,9 +343,15 @@ class RootComponent extends React.Component {
           />}
           {this.state.pageNumber === 6 && <PlaylistComponent
             playlist={this.state.playlistInfo}
+            isPlaying={this.state.isPlaying}
+            playingId={this.state.playingId}
+            onTrackClick={this.onTrackClick}
             backToPlaylists={this.handleDrawerClick}
           />}
-          <TrackPlayerComponent changePlayingState={this.changePlayingState} />
+          <TrackPlayerComponent
+            changePlayingState={this.changePlayingState}
+            serviceType={this.state.playingType}
+          />
         </main>
       </div>
     );

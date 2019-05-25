@@ -22,12 +22,12 @@ class PlaylistModalComponent extends Component {
   };
 
   async componentDidMount() {
-    const res = await fetch('http://localhost:3000/getPlaylists',
+    const res = await fetch("http://localhost:3000/getPlaylists",
       {
         method: "POST",
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          "Accept": "application/json",
+          "Content-Type": "application/json",
         },
       });
     const resultData = await res.json();
@@ -39,13 +39,12 @@ class PlaylistModalComponent extends Component {
   }
 
   addTrackToPlaylist = async (playlistId) => {
-    console.log(this.props.track);
-    await fetch('http://localhost:3000/addTrackToPlaylist',
+    await fetch("http://localhost:3000/addTrackToPlaylist",
       {
         method: "POST",
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          "Accept": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...this.props.track,

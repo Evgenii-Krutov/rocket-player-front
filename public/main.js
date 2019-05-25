@@ -33,20 +33,30 @@ function getDZObject() {
 };
 
 function play() {
+  if (soundcloudPlayer) {
+    soundcloudPlayer.pause();
+  }
   DZ.player.play();
 }
 
 function startTrack() {
+  if (soundcloudPlayer) {
+    soundcloudPlayer.pause();
+  }
   const trackId = localStorage.getItem('trackId');
   DZ.player.pause();
   DZ.player.playTracks([trackId]);
 }
 
 function stop() {
+  if (soundcloudPlayer) {
+    soundcloudPlayer.pause();
+  }
   DZ.player.pause();
 }
 
 function scStartTrack() {
+  DZ.player.pause();
   const trackId = localStorage.getItem('trackId');
   return SC.stream('/tracks/' + trackId).then(function(player){
     player.on("time", function(e) {
@@ -66,6 +76,7 @@ function scStartTrack() {
 };
 
 function scPlay() {
+  DZ.player.pause();
   if (soundcloudPlayer) {
     soundcloudPlayer.play().catch(function(e){
       console.error('Playback rejected.', e);
@@ -74,6 +85,7 @@ function scPlay() {
 }
 
 function scStop() {
+  DZ.player.pause();
   if (soundcloudPlayer) {
     soundcloudPlayer.pause().catch(function(e){
       console.error('An error occured.', e);
